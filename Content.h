@@ -1,7 +1,7 @@
 #include <string>
 #include <algorithm>
+#include "DataStream.h"
 #include "OutputSupport.h"
-
 
 class Content
 {
@@ -12,8 +12,8 @@ class Content
     ~Content() = default;
     Content(const Content& copy) = default;
     Content(Content&& move) = delete;
-    Content& operator=(const Content& copy) = delete; 
-    Content& operator=(Content&& move) = delete;
+    Content& operator=(const Content& copy) = default; 
+    Content& operator=(Content&& move) = default;
 
   public:
     Content() = default;
@@ -35,4 +35,6 @@ class Content
     bool Empty();
 
     std::string GetDataValue() const;
+
+    void ReplaceData(const std::pair<std::string, std::string>& data);
 };
