@@ -32,5 +32,7 @@ class DataStream
 
     void ReadFileContent();
 
+    void FillVectorContent(std::string&& value, const char* const delimeter);
+
     std::vector<std::string> GetFileContent() const;
 };

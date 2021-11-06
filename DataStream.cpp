@@ -74,7 +74,7 @@ void DataStream::ReadFileContent()
     {
         while(getline(this->file, this->fileContent))
         {
-            Output::Print(fileContent, "\n");
+            // Output::Print(fileContent, "\n");
             content.append(fileContent).append(appendNewLine);
         }
     }
@@ -86,6 +86,21 @@ void DataStream::ReadFileContent()
     }
     const auto reserveVal = ::ReserveValue(content, *appendNewLine);
     this->fileCont.reserve(reserveVal);
+    this->FillVectorContent(std::move(content), appendNewLine);
+}
+
+void DataStream::FillVectorContent(std::string&& value, const char* const delimeter)
+{
+    auto findDel = value.find(delimeter);
+    std::size_t pos{};
+
+    while (findDel != std::string::npos)
+    {
+        auto subValue = value.substr(pos, findDel - pos); 
+        this->fileCont.emplace_back(subValue);
+        pos = findDel + 1;
+        findDel = value.find(delimeter, pos);
+    }
 }
 
 std::vector<std::string> DataStream::GetFileContent() const
