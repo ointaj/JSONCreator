@@ -1,52 +1,80 @@
 #include <algorithm>
 
-enum class FlagException
-{
-    Ok,
-    NotInit
-};
-
-class OptionalExceipton
-{
-  public:
-    FlagException exception = FlagException::Ok;
-  public:
-    OptionalExceipton() = default;
-    OptionalExceipton(FlagException _exception) : exception (_exception)
-        {}
-};
-
 namespace opt
 {
-    template <class Obj>
-    class optional : public OptionalExceipton, public Obj
-    {
-        public:
-            optional() : OptionalExceipton{}, Obj{}
-                {}
-            
-            template<class ...Argv>
-            optional(Argv&& ...argv) : OptionalExceipton{}, Obj {std::forward<Argv>(argv)...}
-                {}
-            
-            optional(FlagException _flag) : OptionalExceipton(_flag), Obj{}
-                {}
-            
-            auto emplace()
-            {
-                return opt::optional<Obj>();
-            }
+   template<class T>
+   class optional
+   {
+       public:
+        using ObjType = T;
+        ObjType obj;
+        bool initObj = false;
 
-            auto IsInitialized()
-            {
-                return this->exception != FlagException::NotInit;
-            }
+       public:
+        optional() : obj {}
+        {
+            this->initObj = false;
+        }
+        
+        template<class ... Arg>
+        optional(Arg&& ...args) : obj {std::forward<Arg>(args)...}
+        {
+            this->initObj = true;
+        }
 
-        public:
-            optional(const optional&) = default;
-            optional(optional&&) = default;
-            optional& operator= (const optional&) = default;
-            optional& operator= (optional&&) = default;
+        optional& emplace(optional<T>&& value)
+        {
+            if (value.IsInitialized())
+            {
+                this->obj = std::move(value.obj);
+                value.obj = {};
+                this->initObj = true;
+            }
+            return *this;
+        }
+
+        optional& emplace(const optional<T>& value)
+        {
+            if (value.IsInitialized())
+            {
+                this->obj = value.obj;
+                this->initObj = true;
+            }
+            return *this;
+        }
+
+        template<class ... Arg>
+        optional& emplace(Arg&& ... args)
+        {
+            this->obj = {std::forward<Arg>(args)...};
+            this->initObj = true;
+            return *this;
+        }
+
+        optional& value_or(T&& move) const
+        {
+            if (!this->IsInitialized())
+            {
+                this->obj = std::move(move);
+                this->initObj = true;
+            } 
+            return *this;
+        }
+
+        ObjType& operator*() const
+        {
+            return obj;
+        }
+
+        ObjType* operator->()
+        {
+            return &obj;
+        }
+
+        bool IsInitialized() const
+        {
+            return (initObj == true);
+        }
     };
 }
 
