@@ -1,12 +1,11 @@
 #include <string>
 #include <algorithm>
-#include "DataStream.h"
 #include "OutputSupport.h"
 
 class Content
 {
   private:
-    std::string data;
+    std::string data{};
 
   public:
     ~Content() = default;
@@ -17,16 +16,16 @@ class Content
 
   public:
     Content() = default;
-    Content(const std::size_t& size)
+    explicit Content(std::size_t const& size)
     {
         this->data.reserve(size);
     }
 
-    void ReserveData(const std::size_t& size);
+    void ReserveData(std::size_t const& size);
 
     void AppendDataChar(const char value);
 
-    void AppendData(const std::string &value);
+    void AppendData(std::string const& value);
 
     void ClearData();
 
@@ -36,5 +35,5 @@ class Content
 
     std::string GetDataValue() const;
 
-    void ReplaceData(const std::pair<std::string, std::string>& data);
+    void ReplaceData(std::pair<std::string, std::string> const& data);
 };

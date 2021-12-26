@@ -1,6 +1,7 @@
 #include "DataStream.h"
 #include "OutputSupport.h"
 #include <algorithm>
+#include "DataType.h"
 
 void DataStream::OpenFile()
 {
@@ -44,7 +45,7 @@ bool DataStream::IsFileOpen()
     return false;
 }
 
-static auto ReserveValue(const std::string& value, const char countValue)
+static auto ReserveValue(std::string const& value, const char countValue)
 {
     uint16_t count{};
     auto countCharValue = [&]()
@@ -74,36 +75,56 @@ void DataStream::ReadFileContent()
     {
         while(getline(this->file, this->fileContent))
         {
-            // Output::Print(fileContent, "\n");
+            Output::Print(fileContent, "\n");
             content.append(fileContent).append(appendNewLine);
         }
+        
+        this->fileContent.clear();
+        if (content.empty())
+        {
+            Output::Print("Empty file ! \n");   
+            return;
+        }
+        const auto reserveVal = ::ReserveValue(content, *appendNewLine);
+        this->fileCont.reserve(reserveVal);
+        this->FillVectorContent(std::move(content), appendNewLine);
     }
-    this->fileContent.clear();
-    if (content.empty())
+}
+
+static auto GetDataType(std::string const& value)
+{
+    constexpr const auto strType = "str";
+    constexpr const auto timeType = "time";
+
+    const auto findDel = value.rfind("-");
+    if (findDel != std::string::npos)
     {
-        Output::Print("Empty file ! \n");   
-        return;
+        std::string_view compareValue(value.c_str() + findDel + 1,
+                                      (value.size() - 2) - findDel);
+        if (compareValue.compare(strType) == 0)
+        {
+            return DataType::Str;
+        }
+        else if (compareValue.compare(timeType) == 0)
+        {
+            return DataType::Time;
+        }
     }
-    const auto reserveVal = ::ReserveValue(content, *appendNewLine);
-    this->fileCont.reserve(reserveVal);
-    this->FillVectorContent(std::move(content), appendNewLine);
+
+    return DataType::Trivial;
 }
 
 void DataStream::FillVectorContent(std::string&& value, const char* const delimeter)
-{
+{   
     auto findDel = value.find(delimeter);
     std::size_t pos{};
 
     while (findDel != std::string::npos)
     {
-        auto subValue = value.substr(pos, findDel - pos); 
-        this->fileCont.emplace_back(subValue);
+        auto subValue = value.substr(pos, findDel - pos);
+        auto dataType  = ::GetDataType(subValue);
+        this->fileCont.emplace_back(subValue, dataType);
         pos = findDel + 1;
         findDel = value.find(delimeter, pos);
     }
-}
-
-std::vector<std::string> DataStream::GetFileContent() const
-{
-    return this->fileCont;
 }

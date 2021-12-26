@@ -20,7 +20,7 @@ void Content::AppendDataChar(const char value)
     this->data.push_back(value);
 }
 
-void Content::AppendData(const std::string& value)
+void Content::AppendData(std::string const& value)
 {
     this->data.append(value);
 }
@@ -43,4 +43,28 @@ void Content::RemoveOneCharFromString(const char delimter)
     }
     
     this->data.erase(std::remove(data.begin(), data.end(), delimter), data.end());
+}
+
+void Content::ReplaceData(std::pair<std::string, std::string> const& data)
+{
+    if (this->Empty())
+    {
+        return;
+    }
+
+    if (data.second.empty() || data.first.empty())
+    {
+        return;
+    }
+    
+    const auto findReplaceData = this->data.find(data.first);
+
+    if (findReplaceData == std::string::npos)
+    {
+        Output::Print("Didnt find: ", data.first, "!\n");
+        return;
+    }
+
+    this->data = this->data.replace(findReplaceData, data.first.size(),
+                                    data.second);
 }

@@ -7,7 +7,7 @@ class Output
  public:
     Output() = default;
     ~Output() = default;
-    Output(const Output& copy) = default;
+    Output(const Output& copy) = delete;
     Output(Output&& move) = delete;
     Output& operator=(const Output& copy) = delete; 
     Output& operator=(Output&& move) = delete; 

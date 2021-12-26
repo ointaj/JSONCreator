@@ -1,6 +1,7 @@
 #include <fstream>
 #include <string_view>
 #include <vector>
+#include "Values.h"
 
 class DataStream
 {
@@ -8,7 +9,7 @@ class DataStream
     std::fstream file;
     std::string fileName;
     std::string fileContent;
-    std::vector<std::string> fileCont;
+    std::vector<Valeus> fileCont{};
     
   public:
     DataStream() = default;
@@ -18,7 +19,7 @@ class DataStream
     DataStream& operator= (DataStream&&) = default;
 
   public:
-    DataStream(std::string&& _fileName)
+    explicit DataStream(std::string&& _fileName)
          : fileName(std::move(_fileName))
       {}
 
@@ -34,5 +35,8 @@ class DataStream
 
     void FillVectorContent(std::string&& value, const char* const delimeter);
 
-    std::vector<std::string> GetFileContent() const;
+    auto GetFileContent() const
+    {
+      return this->fileCont;
+    }
 };
