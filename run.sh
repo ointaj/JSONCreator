@@ -13,4 +13,12 @@ then
     exit 2
 fi
 
-./out/JSONCreator "${1:1}"
+FILE=./out/JSONCreator
+if [ ! -f "$FILE" ];
+then
+    echo "File doesnt exist ! Run - ./build.sh"
+    exit 3
+fi
+
+"$FILE" "${1:1}"
+
