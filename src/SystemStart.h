@@ -1,38 +1,30 @@
-#include "Content.h"
 #include "RAIIPattern.h"
-#include "optional.h"
 #include "DataStream.h"
+#include "JSON.h"
 
 constexpr const auto testValeu = 120;
 
 class SystemStart
 {
   private:
-    Content content;
     DataAccess<DataStream> dataStream;
+    JSON::Serialize jsonStream;
     
   public:
     SystemStart() = default;
     SystemStart(const SystemStart& copy) = delete;
-    SystemStart(SystemStart&& move) = default;
+    SystemStart(SystemStart&& move) = delete;
 
     SystemStart& operator=(const SystemStart& copy) = delete;
-    SystemStart& operator=(SystemStart&& move)
-    {
-      this->content = std::move(move.content);
-      this->dataStream = std::move(move.dataStream);
-      return *this;
-    }
+    SystemStart& operator=(SystemStart&& move) = delete;
 
   public:
     SystemStart(std::string&& _fileName)
-         : content(testValeu),
-           dataStream(std::move(_fileName))
-       {}
+        : dataStream(std::move(_fileName))
+         {}
     
     void DoWork()
     {
-       this->dataStream.GetFileData()->ReadFileContent();
+      this->dataStream.GetFileData()->ReadFileContent();
     }
-
 };

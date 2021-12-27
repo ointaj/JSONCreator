@@ -1,41 +1,40 @@
 #include "Content.h"
 
-bool Content::Empty()
+bool JSONContent::Content::Empty()
 {
-    if(this->data.empty())
+    if (this->data.empty())
     {
-        Output::Print("Data are empty ! \n");
         return true;
     }
     return false;
 }
 
-void Content::ReserveData(const std::size_t& size)
+void JSONContent::Content::ReserveData(const std::size_t& size)
 {
     this->data.reserve(size);
 }
 
-void Content::AppendDataChar(const char value)
+void JSONContent::Content::AppendDataChar(const char value)
 {
     this->data.push_back(value);
 }
 
-void Content::AppendData(std::string const& value)
+void JSONContent::Content::AppendData(std::string const& value)
 {
     this->data.append(value);
 }
 
-void Content::ClearData()
+void JSONContent::Content::ClearData()
 {
     this->data.clear();
 }
 
-std::string Content::GetDataValue() const
+std::string JSONContent::Content::GetDataValue() const
 {
     return this->data;
 }
 
-void Content::RemoveOneCharFromString(const char delimter)
+void JSONContent::Content::RemoveOneCharFromString(const char delimter)
 {
     if (this->Empty())
     {
@@ -45,7 +44,7 @@ void Content::RemoveOneCharFromString(const char delimter)
     this->data.erase(std::remove(data.begin(), data.end(), delimter), data.end());
 }
 
-void Content::ReplaceData(std::pair<std::string, std::string> const& data)
+void JSONContent::Content::ReplaceData(std::pair<std::string, std::string> const& data)
 {
     if (this->Empty())
     {
@@ -61,7 +60,6 @@ void Content::ReplaceData(std::pair<std::string, std::string> const& data)
 
     if (findReplaceData == std::string::npos)
     {
-        Output::Print("Didnt find: ", data.first, "!\n");
         return;
     }
 
