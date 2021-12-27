@@ -14,7 +14,7 @@ CMAKE=$?
 
 if [[ ${CMAKE} != 0 ]];
 then
-    echo "ERROR:  cmake"
+    echo "ERROR - cmake"
     exit 2
 fi
 
@@ -23,7 +23,7 @@ MAKE=$?
 
 if [[ ${MAKE} != 0 ]];
 then 
-    echo "$ERROR:  make"
+    echo "ERROR - make"
     exit 3
 fi
 
