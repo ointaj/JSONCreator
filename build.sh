@@ -1,13 +1,12 @@
 
 #!/bin/bash
 
-# rm -rf ./out/build/
-
-BOLD=`tput bold`
+rm -rf ./out/build/
 
 if [[ ${1} == "-r" ]];
 then
     rm -rf ./out/
+    exit 1
 fi
 
 cmake -S . -B ./out/build/
@@ -15,8 +14,8 @@ CMAKE=$?
 
 if [[ ${CMAKE} != 0 ]];
 then
-    echo "${BOLD} ERROR:  cmake"
-    exit 1
+    echo "ERROR:  cmake"
+    exit 2
 fi
 
 make -C ./out/build/
@@ -24,10 +23,10 @@ MAKE=$?
 
 if [[ ${MAKE} != 0 ]];
 then 
-    echo "${BOLD} ERROR:  make"
-    exit 2
+    echo "$ERROR:  make"
+    exit 3
 fi
 
 mv ./out/build/JSONCreator ./out/
 
-echo "${BOLD}SUCCESS"
+echo "SUCCESS"
